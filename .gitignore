@@ -2,10 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+tailwindcss/
 # C extensions
 *.so
-
+.history/
+.env
 # Distribution / packaging
 .Python
 build/
