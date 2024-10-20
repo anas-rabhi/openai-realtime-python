@@ -1,12 +1,18 @@
+*.pyc
+__pycache__
+dist
+chroma_db
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-tailwindcss/
+./chroma_db
+
+test.ipynb
+
 # C extensions
 *.so
-.history/
-.env
+
 # Distribution / packaging
 .Python
 build/
