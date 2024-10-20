@@ -1,6 +1,6 @@
 # Python implementation of the OpenAI Realtime Assistant API
 
-The current OpenAI doc is in React, waiting for python implementation, here is a python implementation of the OpenAI Realtime Assistant API.
+The current OpenAI doc is in React, waiting for python implementation, here is a python implementation of the OpenAI Realtime Assistant API (No longer used because llamaindex implemented a nice python app).
 
 ## Installation
 
