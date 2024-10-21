@@ -7,7 +7,7 @@ import io
 from typing import Optional, Callable, List, Dict, Any
 from enum import Enum
 from pydub import AudioSegment
-
+import os
 
 
 class TurnDetectionMode(Enum):
@@ -59,7 +59,7 @@ class RealtimeClient:
         on_interrupt: Optional[Callable[[], None]] = None,
         extra_event_handlers: Optional[Dict[str, Callable[[Dict[str, Any]], None]]] = None
     ):
-        self.api_key = api_key
+        self.api_key = os.environ.get("OPENAI_API_KEY")
         self.model = model
         self.voice = voice
         self.ws = None
@@ -70,11 +70,11 @@ class RealtimeClient:
         self.base_url = "wss://api.openai.com/v1/realtime"
         self.extra_event_handlers = extra_event_handlers or {}
         self.turn_detection_mode = turn_detection_mode
-
+        print(tools)
         tools = tools or []
         for i, tool in enumerate(tools):
             tools[i] = tool
-        self.tools: List = tools
+        self.tools = tools
 
         # Track current response state
         self._current_response_idcurrent_response_id = None
@@ -88,14 +88,16 @@ class RealtimeClient:
             "Authorization": f"Bearer {self.api_key}",
             "OpenAI-Beta": "realtime=v1"
         }
+        print('1 Hi')
         
         self.ws = await websockets.connect(url, extra_headers=headers)
         
         # Set up default session configuration
-        tools = [t.metadata.to_openai_tool()['function'] for t in self.tools]
+        tools = [t for t in self.tools]
         for t in tools:
             t['type'] = 'function'  # TODO: OpenAI docs didn't say this was needed, but it was
 
+        print('2 Hi')
         
         if self.turn_detection_mode == TurnDetectionMode.MANUAL:
             await self.update_session({
@@ -111,6 +113,8 @@ class RealtimeClient:
                 "tool_choice": "auto",
                 "temperature": 0.8,
             })
+            print('3 Hi')
+
         elif self.turn_detection_mode == TurnDetectionMode.SERVER_VAD:
             await self.update_session({
                 "modalities": ["text", "audio"],

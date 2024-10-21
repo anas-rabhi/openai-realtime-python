@@ -44,7 +44,7 @@ async def main():
     audio_handler = AudioHandler()
     input_handler = InputHandler()
     input_handler.loop = asyncio.get_running_loop()
-    
+    print('1 Hi')
     client = RealtimeClient(
         instructions="Tu es un guide touristique qui répond à des questions en utilisant l'outil RAG et les informations que cet outil te donne. Si l'information n'est pas dans le RAG, tu dis que tu ne sais pas.",
         api_key=os.environ.get("OPENAI_API_KEY"),
@@ -54,20 +54,24 @@ async def main():
         turn_detection_mode=TurnDetectionMode.SERVER_VAD,
         tools=tools,
     )
+    print('2 Hi')
 
     # Start keyboard listener in a separate thread
     listener = keyboard.Listener(on_press=input_handler.on_press)
     listener.start()
+    print('3 Hi')
     
     try:
         await client.connect()
         message_handler = asyncio.create_task(client.handle_messages())
+        print('4 Hi')
         
         print("Connected to OpenAI Realtime API!")
         print("Audio streaming will start automatically.")
         print("Press 'q' to quit")
         print("")
         
+        print('5 Hi')
         # Start continuous audio streaming
         streaming_task = asyncio.create_task(audio_handler.start_streaming(client))
         
@@ -77,6 +81,7 @@ async def main():
             
             if command == 'q':
                 break
+        print('6 Hi')
             
     except Exception as e:
         print(f"Error: {e}")
@@ -84,7 +89,7 @@ async def main():
         audio_handler.stop_streaming()
         audio_handler.cleanup()
         await client.close()
-
+        print('7 Hi')
 if __name__ == "__main__":
     print("Starting Realtime API CLI with Server VAD...")
     asyncio.run(main())
