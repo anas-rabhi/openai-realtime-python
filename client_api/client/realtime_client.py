@@ -8,7 +8,6 @@ from typing import Optional, Callable, List, Dict, Any
 from enum import Enum
 from pydub import AudioSegment
 
-from llama_index.core.tools import BaseTool, AsyncBaseTool, ToolSelection, adapt_to_async_tool, call_tool_with_selection
 
 
 class TurnDetectionMode(Enum):
@@ -54,7 +53,7 @@ class RealtimeClient:
         voice: str = "alloy",
         instructions: str = "You are a helpful assistant",
         turn_detection_mode: TurnDetectionMode = TurnDetectionMode.MANUAL,
-        tools: Optional[List[BaseTool]] = None,
+        tools: Optional[List] = None,
         on_text_delta: Optional[Callable[[str], None]] = None,
         on_audio_delta: Optional[Callable[[bytes], None]] = None,
         on_interrupt: Optional[Callable[[], None]] = None,
@@ -74,8 +73,8 @@ class RealtimeClient:
 
         tools = tools or []
         for i, tool in enumerate(tools):
-            tools[i] = adapt_to_async_tool(tool)
-        self.tools: List[AsyncBaseTool] = tools
+            tools[i] = tool
+        self.tools: List = tools
 
         # Track current response state
         self._current_response_idcurrent_response_id = None

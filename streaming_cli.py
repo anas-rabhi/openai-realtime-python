@@ -2,8 +2,7 @@ import asyncio
 import os
 
 from pynput import keyboard
-from client import RealtimeClient, AudioHandler, InputHandler, TurnDetectionMode
-from llama_index.core.tools import FunctionTool
+from client_api import RealtimeClient, TurnDetectionMode, AudioHandler, InputHandler
 
 # Add your own tools here!
 # NOTE: FunctionTool parses the docstring to get description, the tool name is the function name
@@ -39,7 +38,7 @@ rag_tool = {
 
 
 
-tools = [FunctionTool.from_defaults(fn=get_phone_number)]
+tools = [rag_tool]
 
 async def main():
     audio_handler = AudioHandler()

@@ -18,11 +18,12 @@ def get_embedding(text):
     )
     return response.data[0].embedding
 
-def query_chroma(query_embedding, collection, n_results=5):
+def query_chroma(query_embedding, n_results=5):
     """
     Query ChromaDB for relevant documents using the query embedding.
     """
     # Query ChromaDB
+    collection = chroma_client.get_collection("pdf_collection")
     results = collection.query(
         query_embeddings=[query_embedding],
         n_results=n_results
@@ -36,6 +37,7 @@ def rag_pipeline(query):
     """
     Executes the RAG pipeline.
     """
+    
     # Generate embedding for the query
     question_embeddings = get_embedding(query)
 
