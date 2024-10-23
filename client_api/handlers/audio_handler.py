@@ -121,7 +121,8 @@ class AudioHandler:
         """Start continuous audio streaming."""
         if self.streaming:
             return
-        
+        print('T14')
+
         self.streaming = True
         self.stream = self.audio.open(
             format=self.format,
@@ -130,6 +131,7 @@ class AudioHandler:
             input=True,
             frames_per_buffer=self.chunk
         )
+        print('T145')
         
         print("\nStreaming audio... Press 'q' to stop.")
         
@@ -139,6 +141,7 @@ class AudioHandler:
                 data = self.stream.read(self.chunk, exception_on_overflow=False)
                 # Stream directly without trying to decode
                 await client.stream_audio(data)
+
             except Exception as e:
                 print(f"Error streaming: {e}")
                 break

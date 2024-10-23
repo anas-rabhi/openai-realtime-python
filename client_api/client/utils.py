@@ -1,9 +1,10 @@
 from openai import OpenAI
+import chromadb
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
 collection = chroma_client.get_collection("pdf_collection")
-import chromadb
 
 client = OpenAI()
+
 
 
 def get_embedding(text):
@@ -26,7 +27,7 @@ def query_chroma(query_embedding, n_results=5):
     collection = chroma_client.get_collection("pdf_collection")
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=n_results
+        n_results=5
     )
     # Return the first list of documents
     return results['documents'][0]
@@ -42,7 +43,7 @@ def rag_pipeline(query):
     question_embeddings = get_embedding(query)
 
     # Retrieve relevant chunks from ChromaDB
-    relevant_chunks = query_chroma(question_embeddings, collection)
-
+    relevant_chunks = query_chroma(question_embeddings)
+    print(relevant_chunks)
     return relevant_chunks
 

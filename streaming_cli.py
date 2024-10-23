@@ -16,29 +16,36 @@ def get_phone_number(name: str) -> str:
         return "Unknown"
 
 
-rag_tool = {
-        "type": "function",
-        "function": {
-            "name": "RAG_tool",
-            "description": "Get information about toulouse",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "query": {
-                        "type": "string",
-                        "description": f"""
-                                Text query to search in the RAG database.
-                                """,
-                    }
-                },
-                "required": ["query"],
-            },
-        }
-    }
+rag_tool= {'name': 'get_toulouse_information', 
+ 'description': 'get_toulouse_information(query: str) -> str\nGet the information about the city of Toulouse.', 
+ 'parameters': {'properties': {'query': {'title': 'Query', 'type': 'string'}}, 
+                'required': ['query'], 'type': 'object'}, 
+                'type': 'function'}
+# rag_tool = {
+#         "type": "function",
+#         'name': 'get_toulouse_information',
+#         "function": {
+#             "name": "RAG_tool",
+#             "description": "Get information about toulouse",
+#             "parameters": {
+#                 "type": "object",
+#                 "properties": {
+#                     "query": {
+#                         "type": "string",
+#                         "description": f"""
+#                                 Text query to search in the RAG database.
+#                                 """,
+#                     }
+#                 },
+#                 "required": ["query"],
+#             },
+#         }
+#     }
 
 
 
-tools = []
+# tools = [rag_tool]
+tools = [rag_tool]
 
 async def main():
     audio_handler = AudioHandler()
