@@ -70,14 +70,23 @@ class RealtimeClient:
         self.base_url = "wss://api.openai.com/v1/realtime"
         self.extra_event_handlers = extra_event_handlers or {}
         self.turn_detection_mode = turn_detection_mode
-        print(tools)
-        tools = tools or []
-        for i, tool in enumerate(tools):
-            tools[i] = tool
-        self.tools = tools
+        
+        # Properly format tools with required fields
+        self.tools = []
+        if tools:
+            for tool in tools:
+                if isinstance(tool, dict):
+                    # Ensure each tool has required fields
+                    formatted_tool = {
+                        "type": "function",
+                        "name": tool.get("name"),  # Name is required
+                        "description": tool.get("description", ""),
+                        "parameters": tool.get("parameters", {})
+                    }
+                    self.tools.append(formatted_tool)
 
         # Track current response state
-        self._current_response_idcurrent_response_id = None
+        self._current_response_id = None
         self._current_item_id = None
         self._is_responding = False
         
@@ -88,17 +97,10 @@ class RealtimeClient:
             "Authorization": f"Bearer {self.api_key}",
             "OpenAI-Beta": "realtime=v1"
         }
-        print('1 Hi')
         
         self.ws = await websockets.connect(url, extra_headers=headers)
         
-        # Set up default session configuration
-        tools = [t for t in self.tools]
-        for t in tools:
-            t['type'] = 'function'  # TODO: OpenAI docs didn't say this was needed, but it was
-
-        print('2 Hi')
-        
+        # Ensure tools are properly formatted
         if self.turn_detection_mode == TurnDetectionMode.MANUAL:
             await self.update_session({
                 "modalities": ["text", "audio"],
@@ -109,11 +111,10 @@ class RealtimeClient:
                 "input_audio_transcription": {
                     "model": "whisper-1"
                 },
-                "tools": tools,
+                "tools": self.tools,  # Now properly formatted
                 "tool_choice": "auto",
-                "temperature": 0.8,
+                "temperature": 0.2,
             })
-            print('3 Hi')
 
         elif self.turn_detection_mode == TurnDetectionMode.SERVER_VAD:
             await self.update_session({
@@ -131,7 +132,7 @@ class RealtimeClient:
                     "prefix_padding_ms": 500,
                     "silence_duration_ms": 200
                 },
-                "tools": tools,
+                "tools": self.tools,
                 "tool_choice": "auto",
                 "temperature": 0.8,
             })

@@ -38,7 +38,7 @@ rag_tool = {
 
 
 
-tools = [rag_tool]
+tools = []
 
 async def main():
     audio_handler = AudioHandler()
